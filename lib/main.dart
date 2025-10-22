@@ -30,8 +30,6 @@ class App extends StatelessWidget {
         appBar: AppBar(title: const Text('Sandwich Counter')),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            // If there's enough width, use a Row like the doc screenshot.
-            // Otherwise fall back to a Column (simple, readable responsiveness).
             final useRow = constraints.maxWidth >= 900;
 
             if (useRow) {
@@ -62,7 +60,15 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+    return Text(
+      '$quantity $itemType sandwich(es): ${'🥪' * quantity}',
+      style: const TextStyle(
+        color: Colors.green,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+      textAlign: TextAlign.center,
+    );
   }
 }
 
