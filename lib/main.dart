@@ -9,19 +9,45 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _blueBox(Widget child) => Container(
+      margin: const EdgeInsets.all(10),
+      color: Colors.blue,
+      width: 220, // similar size to the screenshot
+      height: 120,
+      alignment: Alignment.center, // centers its child
+      child: child,
+    );
+
+    final items = <Widget>[
+      _blueBox(const OrderItemDisplay(3, 'BLT')),
+      _blueBox(const OrderItemDisplay(5, 'Club')),
+      _blueBox(const OrderItemDisplay(2, 'Veggie')),
+    ];
+
     return MaterialApp(
       title: 'Sandwich Shop App',
       home: Scaffold(
         appBar: AppBar(title: const Text('Sandwich Counter')),
-        body: Center(
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            color: Colors.blue,
-            width: 350.0,
-            height: 200.0,
-            alignment: Alignment.center,
-            child: const OrderItemDisplay(5, 'Club'),
-          ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            // If there's enough width, use a Row like the doc screenshot.
+            // Otherwise fall back to a Column (simple, readable responsiveness).
+            final useRow = constraints.maxWidth >= 900;
+
+            if (useRow) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: items,
+              );
+            } else {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: items,
+              );
+            }
+          },
         ),
       ),
     );
