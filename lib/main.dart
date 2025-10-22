@@ -9,47 +9,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _blueBox(Widget child) => Container(
-      margin: const EdgeInsets.all(10),
-      color: Colors.blue,
-      width: 220, // similar size to the screenshot
-      height: 120,
-      alignment: Alignment.center, // centers its child
-      child: child,
-    );
-
-    final items = <Widget>[
-      _blueBox(const OrderItemDisplay(3, 'BLT')),
-      _blueBox(const OrderItemDisplay(5, 'Club')),
-      _blueBox(const OrderItemDisplay(2, 'Veggie')),
-    ];
-
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Sandwich Shop App',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Sandwich Counter')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const OrderItemDisplay(5, 'Footlong'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => print('Add button pressed!'),
-                    child: const Text('Add'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => print('Remove button pressed!'),
-                    child: const Text('Remove'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      home: OrderScreen(maxQuantity: 5),
     );
   }
 }
