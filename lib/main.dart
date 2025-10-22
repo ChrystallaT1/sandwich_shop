@@ -30,6 +30,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
   final TextEditingController _noteController = TextEditingController();
+  String _selectedSandwichType = 'Footlong';
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -51,7 +52,22 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            OrderItemDisplay(_quantity, 'Footlong'),
+            OrderItemDisplay(_quantity, _selectedSandwichType),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButton<String>(
+                value: _selectedSandwichType,
+                items: const [
+                  DropdownMenuItem(value: 'Footlong', child: Text('Footlong')),
+                  DropdownMenuItem(value: 'Six-inch', child: Text('Six-inch')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedSandwichType = value!;
+                  });
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
