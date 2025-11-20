@@ -3,6 +3,35 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sandwich_shop/main.dart';
 
 void main() {
+  group('OrderScreen - Switch', () {
+    testWidgets('toggles between six-inch and footlong', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const App());
+
+      expect(
+        find.textContaining('footlong sandwich'),
+        findsOneWidget,
+      ); //verify state
+
+      await tester.tap(find.byType(Switch));
+      await tester.pump(); //find and switch widget
+
+      expect(
+        find.textContaining('six-inch sandwich'),
+        findsOneWidget,
+      ); //verify state
+
+      await tester.tap(find.byType(Switch));
+      await tester.pump(); //toggle switch again
+
+      expect(
+        find.textContaining('footlong sandwich'),
+        findsOneWidget,
+      ); //verify state changes back to 'footlong'
+    });
+  });
+
   group('App', () {
     testWidgets('renders OrderScreen as home', (WidgetTester tester) async {
       await tester.pumpWidget(const App());
