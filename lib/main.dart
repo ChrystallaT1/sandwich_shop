@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/repositories/order_repository.dart';
+import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
 enum BreadType { white, wheat, wholemeal }
 
@@ -38,73 +39,14 @@ class _OrderScreenState extends State<OrderScreen> {
   BreadType _selectedBreadType = BreadType.white;
   bool _isToasted = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _notesController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _notesController.dispose();
-    super.dispose();
-  }
-
-  VoidCallback? _getIncreaseCallback() {
-    if (_quantity < widget.maxQuantity) {
-      return () {
-        setState(() => _quantity++);
-      };
-    }
-    return null;
-  }
-
-  VoidCallback? _getDecreaseCallback() {
-    if (_quantity > 0) {
-      return () {
-        setState(() => _quantity--);
-      };
-    }
-    return null;
-  }
-
-  void _onSandwichTypeChanged(bool value) {
-    setState(() => _isFootlong = value);
-  }
-
-  void _onBreadTypeSelected(BreadType? value) {
-    if (value != null) {
-      setState(() => _selectedBreadType = value);
-    }
-  }
-
-  List<DropdownMenuEntry<BreadType>> _buildDropdownEntries() {
-    List<DropdownMenuEntry<BreadType>> entries = [];
-    for (BreadType bread in BreadType.values) {
-      DropdownMenuEntry<BreadType> newEntry = DropdownMenuEntry<BreadType>(
-        value: bread,
-        label: bread.name,
-      );
-      entries.add(newEntry);
-    }
-    return entries;
-  }
+  final PricingRepository _pricingRepository = PricingRepository();
 
   @override
   Widget build(BuildContext context) {
-    String sandwichType = 'footlong';
-    if (!_isFootlong) {
-      sandwichType = 'six-inch';
-    }
-
-    String noteForDisplay;
-    if (_notesController.text.isEmpty) {
-      noteForDisplay = 'No notes added.';
-    } else {
-      noteForDisplay = _notesController.text;
-    }
+    final totalPrice = _pricingRepository.calculateTotalPrice(
+      isFootlong: _isFootlong,
+      quantity: _quantity,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sandwich Counter', style: heading1)),
@@ -114,9 +56,16 @@ class _OrderScreenState extends State<OrderScreen> {
           children: <Widget>[
             OrderItemDisplay(
               quantity: _quantity,
-              itemType: sandwichType,
+              itemType: _isFootlong ? 'footlong' : 'six-inch',
               breadType: _selectedBreadType,
-              orderNote: noteForDisplay,
+              orderNote: _notesController.text.isEmpty
+                  ? 'No notes added.'
+                  : _notesController.text,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Total Price: £$totalPrice',
+              style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 20),
             Row(
@@ -126,7 +75,9 @@ class _OrderScreenState extends State<OrderScreen> {
                 Switch(
                   key: const Key('sandwich_type_switch'),
                   value: _isFootlong,
-                  onChanged: _onSandwichTypeChanged,
+                  onChanged: (value) {
+                    setState(() => _isFootlong = value);
+                  },
                 ),
                 const Text('footlong', style: normalText),
               ],
@@ -149,8 +100,19 @@ class _OrderScreenState extends State<OrderScreen> {
             DropdownMenu<BreadType>(
               textStyle: normalText,
               initialSelection: _selectedBreadType,
-              onSelected: _onBreadTypeSelected,
-              dropdownMenuEntries: _buildDropdownEntries(),
+              onSelected: (value) {
+                if (value != null) {
+                  setState(() => _selectedBreadType = value);
+                }
+              },
+              dropdownMenuEntries: BreadType.values
+                  .map(
+                    (bread) => DropdownMenuEntry<BreadType>(
+                      value: bread,
+                      label: bread.name,
+                    ),
+                  )
+                  .toList(),
             ),
             const SizedBox(height: 20),
             Padding(
@@ -168,14 +130,22 @@ class _OrderScreenState extends State<OrderScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledButton(
-                  onPressed: _getIncreaseCallback(),
+                  onPressed: _quantity < widget.maxQuantity
+                      ? () {
+                          setState(() => _quantity++);
+                        }
+                      : null,
                   icon: Icons.add,
                   label: 'Add',
                   backgroundColor: Colors.green,
                 ),
                 const SizedBox(width: 8),
                 StyledButton(
-                  onPressed: _getDecreaseCallback(),
+                  onPressed: _quantity > 0
+                      ? () {
+                          setState(() => _quantity--);
+                        }
+                      : null,
                   icon: Icons.remove,
                   label: 'Remove',
                   backgroundColor: Colors.red,
