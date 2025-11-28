@@ -181,4 +181,46 @@ void main() {
       expect(find.byType(ElevatedButton), findsOneWidget);
     });
   });
+
+  group('OrderScreen - Cart Summary', () {
+    testWidgets('displays initial cart summary with 0 items and £0.00', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const App());
+
+      // initial state of the cart summary
+      expect(find.text('Items: 0'), findsOneWidget);
+      expect(find.text('Total: £0.00'), findsOneWidget);
+    });
+
+    testWidgets('updates cart summary when items are added', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const App());
+
+      // Tap the "Add to Cart" button
+      await tester.tap(find.widgetWithText(StyledButton, 'Add to Cart'));
+      await tester.pump();
+
+      //  the cart summary updates
+      expect(find.text('Items: 1'), findsOneWidget);
+      expect(find.textContaining('Total: £'), findsOneWidget);
+    });
+
+    testWidgets('updates cart summary with multiple items', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const App());
+
+      // Tap the "Add to Cart" button multiple times
+      await tester.tap(find.widgetWithText(StyledButton, 'Add to Cart'));
+      await tester.pump();
+      await tester.tap(find.widgetWithText(StyledButton, 'Add to Cart'));
+      await tester.pump();
+
+      //  the cart summary updates correctly
+      expect(find.text('Items: 2'), findsOneWidget);
+      expect(find.textContaining('Total: £'), findsOneWidget);
+    });
+  });
 }
