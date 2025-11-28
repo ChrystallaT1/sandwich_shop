@@ -4,6 +4,29 @@ import 'package:sandwich_shop/main.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
+  group('OrderScreen - SnackBar', () {
+    testWidgets('displays SnackBar when Add to Cart is tapped', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const App());
+
+      // Verify initial state
+      expect(find.byType(SnackBar), findsNothing);
+
+      // Tap the "Add to Cart" button
+      await tester.tap(find.widgetWithText(StyledButton, 'Add to Cart'));
+      await tester.pump(); // Trigger  animation
+
+      // Verify SnackBar is displayed
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.textContaining('Added'), findsOneWidget);
+
+      // Wait for the SnackBar to disappear
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+      expect(find.byType(SnackBar), findsNothing);
+    });
+  });
+
   group('OrderScreen - Switch', () {
     testWidgets('toggles between six-inch and footlong', (
       WidgetTester tester,

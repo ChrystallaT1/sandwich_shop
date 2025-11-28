@@ -65,16 +65,19 @@ class _OrderScreenState extends State<OrderScreen> {
         _cart.add(sandwich, quantity: _quantity);
       });
 
-      String sizeText;
-      if (_isFootlong) {
-        sizeText = 'footlong';
-      } else {
-        sizeText = 'six-inch';
-      }
+      String sizeText = _isFootlong ? 'footlong' : 'six-inch';
       String confirmationMessage =
           'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
 
-      debugPrint(confirmationMessage);
+      // Show the SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(confirmationMessage),
+          duration: const Duration(
+            seconds: 3,
+          ), // Message disappears after 3 seconds
+        ),
+      );
     }
   }
 
