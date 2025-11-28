@@ -176,10 +176,11 @@ class _OrderScreenState extends State<OrderScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                height: 300,
+                height: 200,
+                width: double.infinity,
                 child: Image.asset(
                   _getCurrentImagePath(),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return const Center(
                       child: Text('Image not found', style: normalText),
