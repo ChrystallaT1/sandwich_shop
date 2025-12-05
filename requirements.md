@@ -214,3 +214,23 @@ The following features are NOT part of the initial Profile screen implementation
 - Loyalty program or rewards display
 - Social features (friends, sharing)
 - Payment method management
+
+## Navigation and Drawer Menu
+
+- The app must provide a consistent navigation experience across all main screens.
+- A navigation Drawer must be available from the AppBar on the main screens (e.g. Order, Cart, Profile).
+- The Drawer must include navigation options for:
+  - Order screen
+  - Cart screen
+  - Profile screen
+  - (Any other key screens in the app)
+- Tapping a Drawer item must close the Drawer and navigate to the corresponding screen using named routes.
+- The navigation structure should minimise duplicated code, e.g. by reusing a shared Drawer widget and/or a shared Scaffold wrapper.
+- (Optional/challenge) On wider screens, navigation should adapt to be more “responsive” (e.g. a persistent side menu instead of a slide-in Drawer).
+
+### Navigation Tests
+
+- There must be widget tests that verify:
+  - The Drawer icon appears in the AppBar on the main screens.
+  - Tapping the Drawer icon opens the Drawer and displays the expected menu options.
+  - Tapping a menu item navigates to the correct screen.
