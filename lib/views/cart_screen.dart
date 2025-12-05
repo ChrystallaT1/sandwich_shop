@@ -22,13 +22,44 @@ class _CartScreenState extends State<CartScreen> {
     Navigator.pop(context);
   }
 
-  void _goToCheckout() {
-    Navigator.push(
+  Future<void> _navigateToCheckout() async {
+    if (widget.cart.items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your cart is empty'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CheckoutScreen(cart: widget.cart),
       ),
     );
+
+    if (result != null && mounted) {
+      setState(() {
+        widget.cart.clearCart();
+      });
+
+      final String orderId = result['orderId'] as String;
+      final String estimatedTime = result['estimatedTime'] as String;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Order $orderId confirmed! Estimated time: $estimatedTime',
+          ),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    }
   }
 
   String _getSizeText(bool isFootlong) {
@@ -209,10 +240,10 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     const SizedBox(height: 20),
                     StyledButton(
-                      onPressed: _goToCheckout,
+                      onPressed: _navigateToCheckout,
                       icon: Icons.payment,
-                      label: 'Proceed to Checkout',
-                      backgroundColor: Colors.green,
+                      label: 'Checkout',
+                      backgroundColor: Colors.orange,
                     ),
                     const SizedBox(height: 10),
                     StyledButton(
