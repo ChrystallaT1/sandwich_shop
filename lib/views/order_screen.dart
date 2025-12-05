@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
+import 'package:sandwich_shop/views/about_screen.dart';
+import 'package:sandwich_shop/views/profile_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
@@ -81,6 +83,20 @@ class _OrderScreenState extends State<OrderScreen> {
       MaterialPageRoute<void>(
         builder: (BuildContext context) => CartScreen(cart: _cart),
       ),
+    );
+  }
+
+  void _navigateToAbout() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AboutScreen()),
+    );
+  }
+
+  void _navigateToProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileScreen()),
     );
   }
 
@@ -227,6 +243,20 @@ class _OrderScreenState extends State<OrderScreen> {
                 'Cart: ${_cart.getTotalItems()} items - £${_cart.totalPrice.toStringAsFixed(2)}',
                 style: normalText,
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              StyledButton(
+                onPressed: _navigateToProfile,
+                icon: Icons.person,
+                label: 'My Profile',
+                backgroundColor: Colors.teal,
+              ),
+              const SizedBox(height: 10),
+              StyledButton(
+                onPressed: _navigateToAbout,
+                icon: Icons.info,
+                label: 'About Us',
+                backgroundColor: Colors.purple,
               ),
               const SizedBox(height: 20),
             ],
