@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/order_screen.dart';
+import 'package:sandwich_shop/views/checkout_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
@@ -19,6 +20,15 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   void _goBack() {
     Navigator.pop(context);
+  }
+
+  void _goToCheckout() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutScreen(cart: widget.cart),
+      ),
+    );
   }
 
   String _getSizeText(bool isFootlong) {
@@ -198,6 +208,13 @@ class _CartScreenState extends State<CartScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
+                    StyledButton(
+                      onPressed: _goToCheckout,
+                      icon: Icons.payment,
+                      label: 'Proceed to Checkout',
+                      backgroundColor: Colors.green,
+                    ),
+                    const SizedBox(height: 10),
                     StyledButton(
                       onPressed: _goBack,
                       icon: Icons.arrow_back,
